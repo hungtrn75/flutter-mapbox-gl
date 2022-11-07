@@ -1189,7 +1189,7 @@ final class MapboxMapController
                   layer.setProperties(lineOpacity(layerOpacity));
                   break;
                 case "rasterLayer":
-                  layer.setProperties(rasterO pacity(layerOpacity));
+                  layer.setProperties(rasterOpacity(layerOpacity));
                   break;
                 default:
                   break;
