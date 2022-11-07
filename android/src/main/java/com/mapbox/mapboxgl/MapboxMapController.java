@@ -1091,14 +1091,11 @@ final class MapboxMapController
             break;
           }
           final String id = Convert.toString(call.argument("sourceId"));
-          try {
-            if (style.getSource(id) == null) {
-              result.success(false);
-            } else {
-              result.success(true);
-            }
-          } catch (RuntimeException e) {
+
+          if (style.getSource(id) == null) {
             result.success(false);
+          } else {
+            result.success(true);
           }
         }
       case "style#removeSource":

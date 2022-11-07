@@ -105,7 +105,6 @@ class FullMapState extends State<FullMap> {
         VectorSourceProperties(
           url: "mapbox://mapbox.mapbox-terrain-v2",
         ));
-
     await controller.addLayer(
         "terrain",
         "contour",
