@@ -1097,6 +1097,16 @@ class MapboxMapController extends ChangeNotifier {
     return _mapboxGlPlatform.layerExists(layerId);
   }
 
+  Future<void> setVisibility(String layerId, bool isVisible) async {
+    return _mapboxGlPlatform.setVisibility(layerId, isVisible);
+  }
+
+  Future<void> changeLayerOpacity(
+      String layerId, double layerOpacity, String layerType) async {
+    return _mapboxGlPlatform.changeLayerOpacity(
+        layerId, layerOpacity, layerType);
+  }
+
   /// Removes previously added image source by id
   @Deprecated("This method was renamed to removeSource")
   Future<void> removeImageSource(String imageSourceId) {
