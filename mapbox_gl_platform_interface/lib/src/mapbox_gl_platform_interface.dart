@@ -161,6 +161,10 @@ abstract class MapboxGlPlatform {
 
   Future<void> addSource(String sourceId, SourceProperties properties);
 
+  Future<bool> sourceExists(String sourceId);
+
+  Future<bool> layerExists(String layerId);
+
   Future<String> takeSnapshot(SnapshotOptions snapshotOptions);
 
   @mustCallSuper

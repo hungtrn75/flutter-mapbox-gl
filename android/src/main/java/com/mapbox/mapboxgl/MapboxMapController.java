@@ -1073,7 +1073,26 @@ final class MapboxMapController
           result.success(null);
           break;
         }
-
+      case "style#sourceExists":
+        {
+          if (style == null) {
+            result.error(
+                "STYLE IS NULL",
+                "The style is null. Has onStyleLoaded() already been invoked?",
+                null);
+            break;
+          }
+          final String id = Convert.toString(call.argument("sourceId"));
+          try {
+            if (style.getSource(id) == null) {
+              result.success(false);
+            } else {
+              result.success(true);
+            }
+          } catch (RuntimeException e) {
+            result.success(false);
+          }
+        }
       case "style#removeSource":
         {
           if (style == null) {
@@ -1108,6 +1127,26 @@ final class MapboxMapController
               null);
           result.success(null);
           break;
+        }
+      case "style#layerExists":
+        {
+          if (style == null) {
+            result.error(
+                "STYLE IS NULL",
+                "The style is null. Has onStyleLoaded() already been invoked?",
+                null);
+            break;
+          }
+          final String id = Convert.toString(call.argument("layerId"));
+          try {
+            if (style.getLayer(id) == null) {
+              result.success(false);
+            } else {
+              result.success(true);
+            }
+          } catch (RuntimeException e) {
+            result.success(false);
+          }
         }
       case "style#addLayerBelow":
         {

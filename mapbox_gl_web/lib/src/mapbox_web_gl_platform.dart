@@ -938,6 +938,26 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
     _map.addSource(sourceId, source.toJson());
   }
 
+  @override
+  Future<bool> sourceExists(String sourceId) async {
+    try {
+      final source = _map.getSource(sourceId);
+      return source != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> layerExists(String layerId) async {
+    try {
+      final source = _map.getLayer(layerId);
+      return source != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> addImageSource(
       String imageSourceId, Uint8List bytes, LatLngQuad coordinates) {
     // TODO: implement addImageSource

@@ -637,6 +637,28 @@ class MethodChannelMapboxGl extends MapboxGlPlatform {
   }
 
   @override
+  Future<bool> sourceExists(String sourceId) async {
+    try {
+      return await _channel.invokeMethod('style#sourceExists', <String, Object>{
+        'sourceId': sourceId,
+      });
+    } catch (e) {
+      return new Future.error(e);
+    }
+  }
+
+  @override
+  Future<bool> layerExists(String layerId) async {
+    try {
+      return await _channel.invokeMethod('style#layerExists', <String, Object>{
+        'layerId': layerId,
+      });
+    } catch (e) {
+      return new Future.error(e);
+    }
+  }
+
+  @override
   Future<void> addRasterLayer(
       String sourceId, String layerId, Map<String, dynamic> properties,
       {String? belowLayerId,
