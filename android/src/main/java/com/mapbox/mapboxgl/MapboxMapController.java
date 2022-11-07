@@ -4,6 +4,14 @@
 
 package com.mapbox.mapboxgl;
 
+import static com.mapbox.mapboxsdk.style.layers.Property.NONE;
+import static com.mapbox.mapboxsdk.style.layers.Property.VISIBLE;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.rasterOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -1147,6 +1155,65 @@ final class MapboxMapController
           } catch (RuntimeException e) {
             result.success(false);
           }
+        }
+      case "style#changeLayerOpacity":
+        {
+          if (style == null) {
+            result.error(
+                "STYLE IS NULL",
+                "The style is null. Has onStyleLoaded() already been invoked?",
+                null);
+            break;
+          }
+          final String id = Convert.toString(call.argument("layerId"));
+          try {
+            final Layer layer = style.getLayer(id);
+            if (layer == null) {
+              result.error(
+                  "LAYER IS NOT EXISTS",
+                  "The layer is null. Please add layer before change opacity",
+                  null);
+            } else {
+              final String layerType = Convert.toString(call.argument("layerType"));
+              final float layerOpacity = ((Double) call.argument("layerOpacity")).floatValue();
+              switch (layerType) {
+                case "circleLayer":
+                  layer.setProperties(circleOpacity(layerOpacity));
+                  break;
+                case "fillLayer":
+                  layer.setProperties(fillOpacity(layerOpacity));
+                  break;
+                case "lineLayer":
+                  layer.setProperties(lineOpacity(layerOpacity));
+                  break;
+                case "rasterLayer":
+                  layer.setProperties(rasterOpacity(layerOpacity));
+                  break;
+                default:
+                  break;
+              }
+            }
+          } catch (RuntimeException e) {
+            result.error("RuntimeException", e.toString(), null);
+          }
+        }
+      case "style#setVisibility":
+        {
+          if (style == null) {
+            result.error(
+                "STYLE IS NULL",
+                "The style is null. Has onStyleLoaded() already been invoked?",
+                null);
+          }
+          String layerId = call.argument("layerId");
+          boolean isVisible = call.argument("isVisible");
+          Layer layer = style.getLayer(layerId);
+          if (layer != null) {
+            layer.setProperties(isVisible ? visibility(VISIBLE) : visibility(NONE));
+          }
+
+          result.success(null);
+          break;
         }
       case "style#addLayerBelow":
         {

@@ -958,6 +958,22 @@ class MapboxWebGlPlatform extends MapboxGlPlatform
     }
   }
 
+  @override
+  Future<void> changeLayerOpacity(
+      String layerId, double layerOpacity, String layerType) async {
+    // TODO: implement changeLayerOpacity
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setVisibility(String layerId, bool isVisible) async {
+    final layer = _map.getLayer(layerId);
+    if (layer != null) {
+      _map.setLayoutProperty(
+          layerId, 'visibility', isVisible ? 'visible' : 'none');
+    }
+  }
+
   Future<void> addImageSource(
       String imageSourceId, Uint8List bytes, LatLngQuad coordinates) {
     // TODO: implement addImageSource

@@ -659,6 +659,31 @@ class MethodChannelMapboxGl extends MapboxGlPlatform {
   }
 
   @override
+  Future<void> setVisibility(String layerId, bool isVisible) async {
+    try {
+      return await _channel.invokeMethod('style#setVisibility',
+          <String, Object>{'layerId': layerId, 'isVisible': isVisible});
+    } on PlatformException catch (e) {
+      return new Future.error(e);
+    }
+  }
+
+  @override
+  Future<void> changeLayerOpacity(
+      String layerId, double layerOpacity, String layerType) async {
+    try {
+      return await _channel.invokeMethod(
+          'style#changeLayerOpacity', <String, Object>{
+        'layerId': layerId,
+        'layerType': layerType,
+        'layerOpacity': layerOpacity
+      });
+    } on PlatformException catch (e) {
+      return new Future.error(e);
+    }
+  }
+
+  @override
   Future<void> addRasterLayer(
       String sourceId, String layerId, Map<String, dynamic> properties,
       {String? belowLayerId,

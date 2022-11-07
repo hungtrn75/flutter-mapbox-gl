@@ -165,6 +165,11 @@ abstract class MapboxGlPlatform {
 
   Future<bool> layerExists(String layerId);
 
+  Future<void> setVisibility(String layerId, bool isVisible);
+
+  Future<void> changeLayerOpacity(
+      String layerId, double layerOpacity, String layerType);
+
   Future<String> takeSnapshot(SnapshotOptions snapshotOptions);
 
   @mustCallSuper
