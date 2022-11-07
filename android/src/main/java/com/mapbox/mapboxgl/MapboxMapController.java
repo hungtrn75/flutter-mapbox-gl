@@ -1091,12 +1091,16 @@ final class MapboxMapController
             break;
           }
           final String id = Convert.toString(call.argument("sourceId"));
-
-          if (style.getSource(id) == null) {
+          try {
+            if (style.getSource(id) == null) {
+              result.success(false);
+            } else {
+              result.success(true);
+            }
+          } catch (RuntimeException e) {
             result.success(false);
-          } else {
-            result.success(true);
           }
+          break;
         }
       case "style#removeSource":
         {
@@ -1152,6 +1156,7 @@ final class MapboxMapController
           } catch (RuntimeException e) {
             result.success(false);
           }
+          break;
         }
       case "style#changeLayerOpacity":
         {
@@ -1193,6 +1198,7 @@ final class MapboxMapController
           } catch (RuntimeException e) {
             result.error("RuntimeException", e.toString(), null);
           }
+          break;
         }
       case "style#setVisibility":
         {
