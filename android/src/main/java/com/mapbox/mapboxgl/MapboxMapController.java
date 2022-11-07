@@ -1189,12 +1189,13 @@ final class MapboxMapController
                   layer.setProperties(lineOpacity(layerOpacity));
                   break;
                 case "rasterLayer":
-                  layer.setProperties(rasterOpacity(layerOpacity));
+                  layer.setProperties(rasterO pacity(layerOpacity));
                   break;
                 default:
                   break;
               }
             }
+            result.success(null);
           } catch (RuntimeException e) {
             result.error("RuntimeException", e.toString(), null);
           }
