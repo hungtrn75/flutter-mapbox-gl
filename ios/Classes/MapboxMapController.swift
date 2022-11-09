@@ -550,6 +550,86 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             mapView.style?.addSource(source)
 
             result(nil)
+        case "style#sourceExists":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let sourceId = arguments["sourceId"] as? String else { return }
+            if let source = mapView.style?.source(withIdentifier: sourceId) {
+                return result(true)
+            } else { return result(false) }
+        case "style#layerExists":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let layerId = arguments["layerId"] as? String else { return }
+            if let layer = mapView.style?.layer(withIdentifier: layerId) {
+                return result(true)
+            } else { return result(false) }
+        case "style#setVisibility":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let layerId = arguments["layerId"] as? String else { return }
+            guard let isVisible = arguments["isVisible"] as? Bool else { return }
+            guard let layer = mapView.style?.layer(withIdentifier: layerId) else {
+                result(nil)
+                return
+            }
+            layer.isVisible = isVisible
+            result(nil)
+        case "style#changeLayerOpacity":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let layerId = arguments["layerId"] as? String else { return }
+            guard let layerType = arguments["layerType"] as? String else { return }
+            guard let layerOpacity = arguments["layerOpacity"] as? Double else { return }
+            switch layerType {
+            case "circleLayer":
+                guard let circleLayer = mapView.style?
+                    .layer(withIdentifier: layerId) as? MGLCircleStyleLayer
+                else {
+                    result(FlutterError(
+                        code: "circleLayer",
+                        message: "Cast error",
+                        details: "Could not cast to specified MGLCircleStyleLayer"
+                    ))
+                    return
+                }
+                circleLayer.circleOpacity = NSExpression(forConstantValue: layerOpacity)
+            case "fillLayer":
+                guard let fillLayer = mapView.style?
+                    .layer(withIdentifier: layerId) as? MGLFillStyleLayer
+                else {
+                    result(FlutterError(
+                        code: "fillLayer",
+                        message: "Cast error",
+                        details: "Could not cast to specified MGLFillStyleLayer"
+                    ))
+                    return
+                }
+                fillLayer.fillOpacity = NSExpression(forConstantValue: layerOpacity)
+            case "lineLayer":
+                guard let lineLayer = mapView.style?
+                    .layer(withIdentifier: layerId) as? MGLLineStyleLayer
+                else {
+                    result(FlutterError(
+                        code: "lineLayer",
+                        message: "Cast error",
+                        details: "Could not cast to specified MGLLineStyleLayer"
+                    ))
+                    return
+                }
+                lineLayer.lineOpacity = NSExpression(forConstantValue: layerOpacity)
+            case "rasterLayer":
+                guard let rasterLayer = mapView.style?
+                    .layer(withIdentifier: layerId) as? MGLRasterStyleLayer
+                else {
+                    result(FlutterError(
+                        code: "rasterLayer",
+                        message: "Cast error",
+                        details: "Could not cast to specified MGLRasterStyleLayer"
+                    ))
+                    return
+                }
+                rasterLayer.rasterOpacity = NSExpression(forConstantValue: layerOpacity)
+            default:
+                break
+            }
+            result(nil)
         case "style#removeSource":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let sourceId = arguments["sourceId"] as? String else { return }

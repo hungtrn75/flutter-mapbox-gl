@@ -69,18 +69,21 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
     return controller.removeSource(imageSourceId);
   }
 
-  Future<void> addLayer(String imageLayerId, String imageSourceId) {
-    if (layerAdded) {
-      removeLayer(imageLayerId);
+  Future<void> addLayer(String imageLayerId, String imageSourceId) async {
+    final exist = await controller.layerExists(imageLayerId);
+    if (!exist) {
+      await controller.addImageLayer(imageLayerId, imageSourceId);
+    } else {
+      await controller.setVisibility(imageLayerId, true);
     }
+
     setState(() => layerAdded = true);
-    return controller.addImageLayer(imageLayerId, imageSourceId);
   }
 
   Future<void> addLayerBelow(
-      String imageLayerId, String imageSourceId, String belowLayerId) {
+      String imageLayerId, String imageSourceId, String belowLayerId) async {
     if (layerAdded) {
-      removeLayer(imageLayerId);
+      await controller.removeLayer(imageLayerId);
     }
     setState(() => layerAdded = true);
     return controller.addImageLayerBelow(
@@ -89,7 +92,11 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
 
   Future<void> removeLayer(String imageLayerId) {
     setState(() => layerAdded = false);
-    return controller.removeLayer(imageLayerId);
+    return controller.setVisibility(imageLayerId, false);
+  }
+
+  Future<void> changeOpacity(String layerId) {
+    return controller.changeLayerOpacity(layerId, 0.3, "rasterLayer");
   }
 
   @override
@@ -147,6 +154,11 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
                       onPressed: sourceAdded
                           ? () => addLayer(LAYER_ID, SOURCE_ID)
                           : null,
+                    ),
+                    TextButton(
+                      child: const Text('Change opacity'),
+                      onPressed:
+                          sourceAdded ? () => changeOpacity(LAYER_ID) : null,
                     ),
                     TextButton(
                       child: const Text('Show layer below water'),
