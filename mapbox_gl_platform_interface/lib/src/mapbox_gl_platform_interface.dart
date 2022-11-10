@@ -43,6 +43,8 @@ abstract class MapboxGlPlatform {
 
   final onMapIdlePlatform = ArgumentCallbacks<void>();
 
+  final onRegionIsChangingPlatform = ArgumentCallbacks<void>();
+
   final onUserLocationUpdatedPlatform = ArgumentCallbacks<UserLocation>();
 
   Future<void> initPlatform(int id);
@@ -189,6 +191,7 @@ abstract class MapboxGlPlatform {
     onCameraTrackingChangedPlatform.clear();
     onCameraTrackingDismissedPlatform.clear();
     onMapIdlePlatform.clear();
+    onRegionIsChangingPlatform.clear();
     onUserLocationUpdatedPlatform.clear();
   }
 }

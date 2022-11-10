@@ -105,6 +105,7 @@ final class MapboxMapController
         MapboxMap.OnCameraIdleListener,
         MapboxMap.OnCameraMoveListener,
         MapboxMap.OnCameraMoveStartedListener,
+        MapView.OnCameraIsChangingListener,
         MapView.OnDidBecomeIdleListener,
         MapboxMap.OnMapClickListener,
         MapboxMap.OnMapLongClickListener,
@@ -221,6 +222,20 @@ final class MapboxMapController
     mapboxMap.addOnCameraMoveStartedListener(this);
     mapboxMap.addOnCameraMoveListener(this);
     mapboxMap.addOnCameraIdleListener(this);
+    mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
+      @Override
+      public void onMoveBegin(MoveGestureDetector detector) {
+        methodChannel.invokeMethod("camera#onRegionWillChange", null);
+      }
+
+      @Override
+      public void onMove(MoveGestureDetector detector) {
+        methodChannel.invokeMethod("camera#onRegionIsChanging", null);
+      }
+
+      @Override
+      public void onMoveEnd(MoveGestureDetector detector) {}
+    });
 
     if (androidGesturesManager != null) {
       androidGesturesManager.setMoveGestureListener(new MoveGestureListener());
@@ -245,6 +260,7 @@ final class MapboxMapController
         });
 
     mapView.addOnDidBecomeIdleListener(this);
+    mapView.addOnCameraIsChangingListener(this);
 
     setStyleString(styleStringInitial);
   }
@@ -1950,6 +1966,11 @@ final class MapboxMapController
     draggedFeature = null;
     dragOrigin = null;
     dragPrevious = null;
+  }
+
+  @Override
+  public void onCameraIsChanging() {
+    methodChannel.invokeMethod("camera#onRegionIsChanging", null);
   }
 
   /** Simple Listener to listen for the status of camera movements. */

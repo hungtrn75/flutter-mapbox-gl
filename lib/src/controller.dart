@@ -31,6 +31,8 @@ typedef void OnCameraIdleCallback();
 
 typedef void OnMapIdleCallback();
 
+typedef void OnRegionIsChangingCallback();
+
 /// Controller for a single MapboxMap instance running on the host platform.
 ///
 /// Change listeners are notified upon changes to any of
@@ -61,6 +63,7 @@ class MapboxMapController extends ChangeNotifier {
     this.onMapIdle,
     this.onUserLocationUpdated,
     this.onCameraIdle,
+    this.onRegionIsChanging,
   }) : _mapboxGlPlatform = mapboxGlPlatform {
     _cameraPosition = initialCameraPosition;
 
@@ -169,6 +172,12 @@ class MapboxMapController extends ChangeNotifier {
         onMapIdle!();
       }
     });
+
+    _mapboxGlPlatform.onRegionIsChangingPlatform.add((argument) {
+      if (onRegionIsChanging != null) {
+        onRegionIsChanging!();
+      }
+    });
     _mapboxGlPlatform.onUserLocationUpdatedPlatform.add((location) {
       onUserLocationUpdated?.call(location);
     });
@@ -190,6 +199,8 @@ class MapboxMapController extends ChangeNotifier {
   final OnCameraTrackingChangedCallback? onCameraTrackingChanged;
 
   final OnCameraIdleCallback? onCameraIdle;
+
+  final OnRegionIsChangingCallback? onRegionIsChanging;
 
   final OnMapIdleCallback? onMapIdle;
 
