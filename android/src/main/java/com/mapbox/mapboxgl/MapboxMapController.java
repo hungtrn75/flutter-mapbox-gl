@@ -222,20 +222,24 @@ final class MapboxMapController
     mapboxMap.addOnCameraMoveStartedListener(this);
     mapboxMap.addOnCameraMoveListener(this);
     mapboxMap.addOnCameraIdleListener(this);
-    mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
-      @Override
-      public void onMoveBegin(MoveGestureDetector detector) {
-        methodChannel.invokeMethod("camera#onRegionWillChange", null);
-      }
+    mapboxMap.addOnMoveListener(
+        new MapboxMap.OnMoveListener() {
+          @Override
+          public void onMoveBegin(MoveGestureDetector detector) {
+            methodChannel.invokeMethod("camera#onRegionWillChange", null);
+          }
 
-      @Override
-      public void onMove(MoveGestureDetector detector) {
-        methodChannel.invokeMethod("camera#onRegionIsChanging", null);
-      }
+          @Override
+          public void onMove(MoveGestureDetector detector) {
+            if (!trackCameraPosition) return;
+            final Map<String, Object> arguments = new HashMap<>(2);
+            arguments.put("position", Convert.toJson(mapboxMap.getCameraPosition()));
+            methodChannel.invokeMethod("camera#onMove", arguments);
+          }
 
-      @Override
-      public void onMoveEnd(MoveGestureDetector detector) {}
-    });
+          @Override
+          public void onMoveEnd(MoveGestureDetector detector) {}
+        });
 
     if (androidGesturesManager != null) {
       androidGesturesManager.setMoveGestureListener(new MoveGestureListener());
@@ -1970,7 +1974,10 @@ final class MapboxMapController
 
   @Override
   public void onCameraIsChanging() {
-    methodChannel.invokeMethod("camera#onRegionIsChanging", null);
+    if (!trackCameraPosition) return;
+    final Map<String, Object> arguments = new HashMap<>(2);
+    arguments.put("position", Convert.toJson(mapboxMap.getCameraPosition()));
+    methodChannel.invokeMethod("camera#onMove", null);
   }
 
   /** Simple Listener to listen for the status of camera movements. */

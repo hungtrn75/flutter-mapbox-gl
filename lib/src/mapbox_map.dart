@@ -41,9 +41,9 @@ class MapboxMap extends StatefulWidget {
     this.onAttributionClick,
     this.onCameraTrackingDismissed,
     this.onCameraTrackingChanged,
+    this.onCameraMove,
     this.onCameraIdle,
     this.onMapIdle,
-    this.onRegionIsChanging,
     this.annotationOrder = const [
       AnnotationType.line,
       AnnotationType.symbol,
@@ -223,7 +223,7 @@ class MapboxMap extends StatefulWidget {
   /// * All fade/transition animations have completed
   final OnMapIdleCallback? onMapIdle;
 
-  final OnRegionIsChangingCallback? onRegionIsChanging;
+  final OnCameraMoveCallback? onCameraMove;
 
   /// Set `MapboxMap.useHybridComposition` to `false` in order use Virtual-Display
   /// (better for Android 9 and below but may result in errors on Android 12)
@@ -312,7 +312,7 @@ class _MapboxMapState extends State<MapboxMap> {
       onCameraTrackingChanged: widget.onCameraTrackingChanged,
       onCameraIdle: widget.onCameraIdle,
       onMapIdle: widget.onMapIdle,
-      onRegionIsChanging: widget.onRegionIsChanging,
+      onCameraMove: widget.onCameraMove,
       annotationOrder: widget.annotationOrder,
       annotationConsumeTapEvents: widget.annotationConsumeTapEvents,
     );
