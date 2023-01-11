@@ -54,6 +54,10 @@ class FullMapState extends State<FullMap> {
           onMapCreated: _onMapCreated,
           initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
           onStyleLoadedCallback: _onStyleLoadedCallback,
+          trackCameraPosition: true,
+          onCameraMove: (position) {
+            print("onCameraMove $position");
+          },
         ));
   }
 }
